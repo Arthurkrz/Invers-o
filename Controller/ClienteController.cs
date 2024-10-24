@@ -3,27 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using Inversão.Service;
 using Inversão.Domain.Entities;
+using Inversão.Repository;
 
 namespace Inversão.Controller
 {
     internal class ClienteController
     {
         private readonly ClienteService _clienteService;
-        public ClienteController()
-        {
-            _clienteService = new ClienteService();
-        }
         public void AddCliente(string nome, string email, string cpf, int idade)
         {
             if (BaseValid(nome, email, cpf, idade))
             {
-                Cliente cliente = new Cliente(nome, email, cpf, idade)
-                {
-                    Nome = nome,
-                    Email = email,
-                    CPF = cpf,
-                    Idade = idade
-                };
+                Cliente cliente = new Cliente(nome, email, cpf, idade);
+                _clienteService = new ClienteService(new ClienteRepository());
                 _clienteService.Add(cliente);
                 _clienteService.EnviarNF(cliente);
                 _clienteService.Cobranca(cliente);
